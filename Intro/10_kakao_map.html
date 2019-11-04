@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <div id="map" style="width:100%;height:400px;"></div>
+    <!-- 버튼을 클릭하면 세점의 위도와 경도를 콘솔에 출력 -->
+    <button id='center'>모여라</button>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ece6b26215a9edc341691397c4045f25"></script>
+    <script src='./circumcenter.js'></script>
+    <script>
+        const container = document.querySelector('#map') //지도를 담을 영역의 DOM 레퍼런스
+        const btn = document.querySelector('#center')
+        
+
+        const options = { //지도를 생성할 때 필요한 기본 옵션
+          center: new kakao.maps.LatLng(33.450701, 126.570667),
+          level: 3 //지도의 레벨(확대, 축소 정도)
+          //draggable:false
+        }
+        const map = new kakao.maps.Map(container, options) //지도 생성 및 객체 리턴
+        const markers = []
+        let centerMarker
+        btn.addEventListener('click', function(){
+          if (markers.length === 3){
+            // console.log(markers[0].getPosition(),markers[1].getPosition(),markers[2].getPosition())
+            a = []
+            //const center = circumcenter([
+              //[markers[0].getPosition().Ha, markers[0].getPosition().Ga],
+              //[markers[1].getPosition().Ha, markers[1].getPosition().Ga],
+              //[markers[2].getPosition().Ha, markers[2].getPosition().Ga]
+            //])
+            for (let i=0;i<3;i++){
+              a.push([markers[i].getPosition().Ha, markers[i].getPosition().Ga])
+            }
+            const center =circumcenter(a)
+            //console.log(center)
+            const position = new kakao.maps.LatLng(center[0],center[1])
+            console.log(position)
+
+            // 기존 마커가 있다면 지우고 새로운 마커 추가
+            if (centerMarker){
+              centerMarker.setMap(null)
+            }
+            centerMarker = new kakao.maps.Marker({
+              map,
+              position
+            })
+            
+          } else {
+            // 마커를 더 찍어달라고 출력
+            console.log('마커를 더 찍어주세요.')
+          }
+          
+        })
+        
+        kakao.maps.event.addListener(map, 'click', function(e){
+          //console.log(e.latLng.Ga, e.latLng.Ha)
+          createMarker(e.latLng)
+          
+        })
+        const createMarker = (position)=>{
+          const newMarker = new kakao.maps.Marker({
+            map, //map: map 이랑 같은 것
+            position
+          })
+          markers.push(newMarker)
+          newMarker.setMap(map)
+
+          if (markers.length > 3){
+            markers[0].setMap(null) // 첫번째 마커를 지도에서 지워줌.
+            markers.shift()
+
+          }
+
+          console.log(markers)
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>shopping list</h1>
+  <input id='item-input' type="text">
+  <button id='add-button'>add</button>
+  <ul id='shopping-list'>
+    
+  </ul>
+  <script>
+    //1.input태그찾기
+    const input = document.querySelector('#item-input')
+    //2.button태그찾기
+    const button = document.querySelector('#add-button')
+    //3.u1 태그찾기
+    const ul = document.querySelector('#shopping-list')
+
+    button.addEventListener('click', function(e){
+      // 사용자가 입력한 데이터 가져오기
+      const itemValue = input.value
+      input.value = ''
+
+      // 사용자가 입력한 데이터를 이용해서 li태그로 묶어주기
+      const tag = document.createElement('li')
+      tag.innerText = itemValue
+
+      tag.addEventListener('click',function(e){
+        // 취소선이 있다면
+        if (tag.style.textDecoration === 'line-through'){
+          //취소선 삭제
+          tag.style.textDecoration = ''
+        } else {
+          // 취소선이 없으면 취소선 추가
+          tag.style.textDecoration = 'line-through'
+        }
+      })
+
+      
+      // ul 태그의 자식요소로 tag를 추가
+      ul.appendChild(tag)
+
+      // 삭제 버튼 생성
+      const deleteBtn = document.createElement('button')
+      deleteBtn.innerText = '삭제'
+
+      // 삭제 버튼 이벤트 추가
+      deleteBtn.addEventListener('click',function(e){
+        tag.remove()
+      })
+      // 삭제 버튼을 자식 요소로 추가
+      tag.appendChild(deleteBtn)
+    })
+  </script>
+</body>
+</html>
